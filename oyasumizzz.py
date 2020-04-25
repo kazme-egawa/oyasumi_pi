@@ -1,9 +1,6 @@
 #!/usr/bin/env python
-import os
+import subprocess
 import datetime
-import pygame
-import pygame.camera
-from pygame.locals import *
 from twython import Twython
 
 # APIキーとアクセストークンを定数に登録しておきます。
@@ -15,20 +12,18 @@ ACCESS_SECRET = '***************YOUR DATA*****************'
 # コマンドを楽にするためにTwythonのオブジェクトにキーの登録をしておきます。
 api = Twython(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET)
 
-# カメラの初期化を行い、写真を一枚パシャリ。
-pygame.init()
-pygame.camera.init()
-cam = pygame.camera.Camera("/dev/video0", (1280, 720))
-cam.start()
-image = cam.get_image()
+# カメラの初期化を行い、写真を一枚パシャリ。fswebcamの引数の-Fや-Sは環境の明るさに合わせて変更してください。
 now = datetime.datetime.now()
-filename = now.strftime('%Y%m%d_%H%M%S') + '.jpg'
-pygame.image.save(image, filename)
+fileName = '*******YOUR DIRECTORY*******' + \
+    now.strftime('%Y%m%d_%H%M%S') + '.jpg'
+cmd = 'fswebcam -r 1280x720 -F 10 -S 100 --no-banner ' + fileName
+subprocess.run(cmd, shell=True)
 
-photo = open(filename, 'rb')
+photo = open(fileName, 'rb')
 response = api.upload_media(media=photo)
 api.update_status(status='おやすみ〜 #raspberrypi #zzz',
                   media_ids=[response['media_id']])
 
 
-os.remove(filename)
+cmd = 'rm' + fileName
+subprocess.run(cmd, shell=True)
