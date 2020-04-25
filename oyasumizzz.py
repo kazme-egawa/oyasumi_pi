@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+import datetime
 import pygame
 import pygame.camera
 from pygame.locals import *
@@ -24,6 +26,9 @@ filename = now.strftime('%Y%m%d_%H%M%S') + '.jpg'
 pygame.image.save(image, filename)
 
 photo = open(filename, 'rb')
-response = twitter.upload_media(media=photo)
+response = api.upload_media(media=photo)
 api.update_status(status='おやすみ〜 #raspberrypi #zzz',
                   media_ids=[response['media_id']])
+
+
+os.remove(filename)
