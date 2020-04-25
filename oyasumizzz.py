@@ -19,10 +19,14 @@ fileName = '*******YOUR DIRECTORY*******' + \
 cmd = 'fswebcam -r 1280x720 -F 10 -S 100 --no-banner ' + fileName
 subprocess.run(cmd, shell=True)
 
+# ツイートする内容はここで変更
+message = 'おやすみ〜  # raspberrypi'
+
+＃写真をtwitterへ投稿
 photo = open(fileName, 'rb')
 response = api.upload_media(media=photo)
-api.PostUpdate('おやすみ〜 #raspberrypi', media=fileName)
+api.PostUpdate(message, media=fileName)
 
-
+# いらなくなった写真を削除
 cmd = 'rm ' + fileName
 subprocess.run(cmd, shell=True)
